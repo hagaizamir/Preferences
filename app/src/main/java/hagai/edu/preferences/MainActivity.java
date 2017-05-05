@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,10 +22,49 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     EditText etNote;
     SharedPreferences prefs;
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("Ness " , " onPause");
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Ness " , " onResume");
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Ness " , " onStop");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("Ness " , " onStart");
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("score" , score);
+        Log.d("Ness " , " onSaveInstanceState");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("Ness " , " onCreate");
+
+        if (savedInstanceState==null){
+            //the real start
+            //getSupportFragmentManager().beginTransaction().replace(.....new LoginFragment())
+//            score = savedInstanceState.getInt("score");
+        }
+
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         etNote = (EditText) findViewById(R.id.etNote);
@@ -126,16 +166,20 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         Toast.makeText(this, "Score" + score, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.putInt("score" , score);
 
-    }
+
+    //    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putInt("score" , score);
+//        Log.d("Ness " , " onSaveInstanceState");
+//
+//    }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onRestoreInstanceState(savedInstanceState, persistentState);
         score = savedInstanceState.getInt("score");
+        Log.d("Ness " , " onRestoreInstanceState");
     }
 }
