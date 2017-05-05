@@ -1,6 +1,8 @@
 package hagai.edu.preferences;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +13,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.OnLogingListener, TextWatcher {
     FloatingActionButton fab;
     Toolbar toolbar;
     EditText etNote;
+    SharedPreferences prefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,11 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         etNote = (EditText) findViewById(R.id.etNote);
         etNote.addTextChangedListener(this);
         setSupportActionBar(toolbar);
+        prefs = getSharedPreferences("notes" , MODE_PRIVATE);
+
+        load();
+
+
 
 
 
@@ -37,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
 //            }
 //        });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,12 +102,40 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
 
 
     }
+    private void load (){
+        String note = prefs.getString("Note", "");
+        etNote.setText(note);
+
+    }
     private void save (){
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("Note" , etNote.getText().toString());
+        editor.apply();
+
 
     }
 
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+    private  int score = 0;
+
+    public void increment(View view) {
+        score++;
+        Toast.makeText(this, "Score" + score, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putInt("score" , score);
+
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+        score = savedInstanceState.getInt("score");
     }
 }
